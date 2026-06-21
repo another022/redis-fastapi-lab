@@ -1,0 +1,6 @@
+apiVersion: v2
+name: redis-fastapi
+description: A Redis-backed FastAPI application
+type: application
+version: 0.1.0          # Chart 自身的版本
+appVersion: "0.1.0"     # 应用的版本(对应你的镜像 tag)

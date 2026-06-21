@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: fastapi-ingress
+  labels:
+    app: fastapi
+  annotations:
+    # 重写规则:把匹配到的路径重写后再转发给后端。
+    # 这里用 /$2 把捕获组之后的路径传给 FastAPI。
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx        # 用哪个 Ingress 控制器(刚装的那个)
+  rules:
+    - http:
+        paths:
+          # 路径 1:/api/xxx → 去掉 /api 前缀,转发给 fastapi 的 /xxx
+          - path: /api(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: fastapi     # 转发到 fastapi 这个 ClusterIP Service
+                port:
+                  number: 8000

@@ -1,0 +1,31 @@
+# ====== FastAPI 应用配置 ======
+fastapi:
+  image:
+    repository: redis-fastapi
+    tag: "0.1.0"
+    pullPolicy: IfNotPresent   # 用本地 kind load 的镜像
+  replicas: 2
+  service:
+    type: ClusterIP
+    port: 8000
+
+# ====== Redis 配置 ======
+redis:
+  image:
+    repository: redis
+    tag: "7-alpine"
+  service:
+    port: 6379
+  # 非敏感配置(会进 ConfigMap)
+  host: redis
+  # 持久化存储大小
+  storage: 1Gi
+  # 密码(会进 Secret)。生产应来自外部密钥管理,这里教学简化。
+  password: labpassword123
+
+# ====== Ingress 配置 ======
+ingress:
+  enabled: true
+  className: nginx
+  path: /api(/|$)(.*)
+  rewriteTarget: /$2

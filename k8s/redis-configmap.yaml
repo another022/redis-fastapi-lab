@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-config
+  labels:
+    app: redis
+data:
+  # 非敏感配置放 ConfigMap。这里给 FastAPI 用的连接参数。
+  REDIS_HOST: "redis"        # Redis Service 的名字,集群 DNS 能解析
+  REDIS_PORT: "6379"

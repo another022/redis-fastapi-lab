@@ -1,0 +1,23 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: redis-fastapi
+nodes:
+  - role: control-plane
+    # 给控制平面节点打个标签,Ingress NGINX 后面会用它来选节点
+    kubeadmConfigPatches:
+      - |
+        kind: InitConfiguration
+        nodeRegistration:
+          kubeletExtraArgs:
+            node-labels: "ingress-ready=true"
+    # 把宿主机的 80/443 映射到这个节点,
+    # 这样 Stage 7 的 Ingress 才能从 http://localhost 访问到
+    extraPortMappings:
+      - containerPort: 80
+        hostPort: 80
+        protocol: TCP
+      - containerPort: 443
+        hostPort: 443
+        protocol: TCP
+  - role: worker
+  - role: worker
