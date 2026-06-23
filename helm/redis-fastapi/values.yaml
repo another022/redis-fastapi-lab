@@ -4,7 +4,7 @@ fastapi:
     repository: redis-fastapi
     tag: "0.1.0"
     pullPolicy: IfNotPresent   # 用本地 kind load 的镜像
-  replicas: 3
+  replicas: 2
   service:
     type: ClusterIP
     port: 8000
