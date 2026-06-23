@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: redis-fastapi
+  namespace: argocd          # Application 对象住在 argocd 命名空间
+spec:
+  project: default
+
+  # --- 源:Git 仓库在哪、要部署哪个目录 ---
+  source:
+    repoURL: https://github.com/another022/redis-fastapi-lab.git
+    targetRevision: main      # 跟踪 main 分支
+    path: helm/redis-fastapi  # chart 在仓库里的路径
+
+  # --- 目标:部署到哪个集群、哪个命名空间 ---
+  destination:
+    server: https://kubernetes.default.svc   # 就是当前这个集群
+    namespace: default        # 应用部署到 default 命名空间
+
+  # --- 同步策略:GitOps 的灵魂 ---
+  syncPolicy:
+    automated:
+      prune: true        # Git 里删了的资源,集群里也自动删
+      selfHeal: true     # 集群被手动改动(漂移),自动纠正回 Git 状态
+    syncOptions:
+      - CreateNamespace=true
